@@ -8,9 +8,9 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 
-bezkoder:
+
+demo:
   openapi:
     dev-url: http://localhost:8080
-    prod-url: https://bezkoder-api.com
