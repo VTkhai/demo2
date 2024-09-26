@@ -1,5 +1,6 @@
 package com.example.demo2.model.request.authentication;
 
+import com.example.demo2.entity.authentication.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-
     private String firstname;
 
     private String lastname;
@@ -18,4 +18,6 @@ public class RegisterRequest {
     private String email;
 
     private String password;
+
+    private Role role;
 }

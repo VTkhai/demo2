@@ -15,16 +15,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponse {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Name cannot be empty")
     private String productName;
 
-    @Column(length = 500)
     private String description;
 
-    @Min(value = 0, message = "Price must be non-negative")
     private Double price;
 }

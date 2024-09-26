@@ -98,4 +98,6 @@ public class ProductController {
         List<ProductResource> products = productService.findProductsByPriceBetween(minPrice, maxPrice);
         return ResponseEntity.ok(products);
     }
+
+
 }

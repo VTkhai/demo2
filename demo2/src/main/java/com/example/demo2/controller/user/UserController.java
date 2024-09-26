@@ -1,8 +1,10 @@
 package com.example.demo2.controller.user;
 
-import com.example.demo2.model.request.authentication.UserRequest;
+import com.example.demo2.entity.authentication.Role;
+import com.example.demo2.model.request.authentication.RegisterRequest;
 import com.example.demo2.model.response.UserResponse;
 import com.example.demo2.service.user.UserService;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @RequestMapping("/user")
 @Tag(name = "User")
 public class UserController {
@@ -29,7 +32,7 @@ public class UserController {
     public ResponseEntity<UserResponse> updateUser(
             @Valid
             @PathVariable(name = "idUser") Long idUser,
-            @RequestBody UserRequest userRequest
+            @RequestBody RegisterRequest userRequest
     ){
         UserResponse userResponse = userService.updateUser(idUser, userRequest);
         return ResponseEntity.ok(userResponse);
@@ -60,7 +63,7 @@ public class UserController {
 
 
     @Operation(summary = "Get UserList",
-            description = "Get a UserList . The response is Supplier object with  name, "
+            description = "Get a UserList . The response is User object with name, "
                     + "email")
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers(){
@@ -68,4 +71,19 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @Operation(summary = "Search users base on firstname or lastname", description = "Search Users")
+    @GetMapping("/search")
+    public ResponseEntity<List<UserResponse>> searchUsers(
+            @RequestParam(required = false) String firstname,@RequestParam(required = false) String lastname) {
+
+        List<UserResponse> userResponses = userService.searchUsers(firstname, lastname);
+        return ResponseEntity.ok(userResponses);
+    }
+
+    @Operation(summary = "Search users base on role", description = "Search Users by role")
+    @GetMapping("/search/role")
+    public ResponseEntity<List<UserResponse>> searchUserRole(@RequestParam Role role) {
+        List<UserResponse> users = userService.searchByRole(role);
+        return ResponseEntity.ok(users);
+    }
 }

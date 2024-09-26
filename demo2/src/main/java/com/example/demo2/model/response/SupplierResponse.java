@@ -13,14 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SupplierResponse {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idSup;
 
-    @NotEmpty(message = "Name cannot be empty")
     private String name;
 
-    @NotEmpty(message = "address cannot be empty")
     private String address;
 }
 

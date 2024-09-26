@@ -20,21 +20,30 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Tắt CSRF protection
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/swagger-ui/**",
-                                "/auth/register/**",
+                        .requestMatchers(
+                                "/v2/api-docs",
+                                "/v3/api-docs",
                                 "/v3/api-docs/**",
-                        "/Use/**").permitAll() // Cho phép truy cập vào tài liệu API
-                        .anyRequest().permitAll()// Yêu cầu xác thực cho tất cả các yêu cầu khác
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/swagger-ui.html",
+                                "/auth/**"
+                        ).permitAll() // Allow access to API documentation
+                        .anyRequest().permitAll() // Require authentication for all other requests
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Không lưu trạng thái phiên
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session management
                 )
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider) // Set your authentication provider
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 
         return http.build();
     }
