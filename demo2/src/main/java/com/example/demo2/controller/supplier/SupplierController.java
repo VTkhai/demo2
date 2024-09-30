@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/suppliers")
 @Tag(name = "Suppliers")
+@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
 public class SupplierController {
 
     @Autowired
@@ -25,6 +27,7 @@ public class SupplierController {
             description = "Get a Supplier object by specifying its id. The response is Supplier object with id, name,"
                     + " address")
     @GetMapping("/{idSup}")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'management:read')")
     public  ResponseEntity<SupplierResource> getSupplierDetails(
             @PathVariable(name = "idSup") Long idSup
     ){
@@ -36,6 +39,7 @@ public class SupplierController {
             description = "Get a Supplier object by specifying its id. The response is Supplier object with id, name, "
                     + "address")
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('admin:read', 'management:read')")
     public ResponseEntity<List<SupplierResource>> getAllSuppliers(){
         List<SupplierResource> supplierResources = supplierService.getAllSupplier();
         return ResponseEntity.ok(supplierResources);
@@ -43,6 +47,7 @@ public class SupplierController {
 
     @Operation(summary = "Create Supplier base on info",
             description = "Create a Supplier object")
+    @PreAuthorize("hasAnyAuthority('admin:create', 'management:create')")
     @PostMapping
     public ResponseEntity<SupplierResource> createSupplier(
             @Valid
@@ -55,6 +60,7 @@ public class SupplierController {
             description = "Get a Supplier object by specifying its id. The response is Supplier object with id, name,"
                     + " address")
     @PutMapping("/{idSup}")
+    @PreAuthorize("hasAnyAuthority('admin:update', 'management:update')")
     public ResponseEntity<SupplierResource> updateSupplier(
             @Valid
             @PathVariable(name = "idSup") Long idSup,
@@ -67,6 +73,7 @@ public class SupplierController {
     @Operation(summary = "Delete Supplier base on idSup",
             description = "Delete a Supplier object by specifying its id")
     @DeleteMapping("/{idSup}")
+    @PreAuthorize("hasAnyAuthority('admin:delete', 'management:delete')")
     public ResponseEntity<Void> deleteSupplier(
             @PathVariable Long idSup
     ){
@@ -76,6 +83,7 @@ public class SupplierController {
 
     @Operation(summary = "Search suppliers base on name", description = "Search Supplier")
     @GetMapping("/search")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'management:read')")
     public ResponseEntity<List<SupplierResource>> searchSuppliers(
             @RequestParam(required = false) String name) {
 
@@ -85,6 +93,7 @@ public class SupplierController {
 
     @Operation(summary = "Search suppliers base on address", description = "Search Supplier Address")
     @GetMapping("/search/address")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'management:read')")
     public ResponseEntity<List<SupplierResource>> searchAddress(
             @RequestParam(required = false) String address) {
         List<SupplierResource> supplierResources = supplierService.searchAddress(address);

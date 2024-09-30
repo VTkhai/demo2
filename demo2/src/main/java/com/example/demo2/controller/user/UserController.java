@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @RequestMapping("/user")
 @Tag(name = "User")
+@PreAuthorize("hasRole('ADMIN')")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -28,6 +30,7 @@ public class UserController {
     @Operation(summary = "Update User base on info",
             description = "Get a User object by specifying its id. The response is User object with firstname, lastname,"
                     + "email")
+    @PreAuthorize("hasAuthority('admin:update')")
     @PutMapping("/{idUser}")
     public ResponseEntity<UserResponse> updateUser(
             @Valid
@@ -41,6 +44,7 @@ public class UserController {
 
     @Operation(summary = "Delete User base on idUser",
             description = "Delete a User object by specifying its id")
+    @PreAuthorize("hasAuthority('admin:delete')")
     @DeleteMapping("/{idUser}")
     public ResponseEntity<Void> deleteUser(
             @PathVariable Long idUser
@@ -54,6 +58,7 @@ public class UserController {
             description = "Get a User object by specifying its id. The response is User object with firstname,"
                     + "lastname, email")
     @GetMapping("/{idUser}")
+    @PreAuthorize("hasAuthority('admin:read')")
     public  ResponseEntity<UserResponse> getUserDetails(
             @PathVariable(name = "idUser") Long idUser
     ){
@@ -65,6 +70,7 @@ public class UserController {
     @Operation(summary = "Get UserList",
             description = "Get a UserList . The response is User object with name, "
                     + "email")
+    @PreAuthorize("hasAuthority('admin:read')")
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers(){
         List<UserResponse> users = userService.getAllUser();
@@ -72,6 +78,7 @@ public class UserController {
     }
 
     @Operation(summary = "Search users base on firstname or lastname", description = "Search Users")
+    @PreAuthorize("hasAuthority('admin:read')")
     @GetMapping("/search")
     public ResponseEntity<List<UserResponse>> searchUsers(
             @RequestParam(required = false) String firstname,@RequestParam(required = false) String lastname) {
@@ -81,6 +88,7 @@ public class UserController {
     }
 
     @Operation(summary = "Search users base on role", description = "Search Users by role")
+    @PreAuthorize("hasAuthority('admin:read')")
     @GetMapping("/search/role")
     public ResponseEntity<List<UserResponse>> searchUserRole(@RequestParam Role role) {
         List<UserResponse> users = userService.searchByRole(role);

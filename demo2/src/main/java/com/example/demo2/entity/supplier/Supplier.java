@@ -34,6 +34,6 @@ public class Supplier {
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Schema(description = "Product list", example = "keo gum")
-    private  List<Product> products;
+    private List<Product> products;
 
 }

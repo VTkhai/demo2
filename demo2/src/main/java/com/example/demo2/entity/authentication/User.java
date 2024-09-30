@@ -3,6 +3,7 @@ package com.example.demo2.entity.authentication;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +21,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @Table(name = "user_entity")
-@Schema(description = "User Model ")
+@Schema(description = "User Model")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +39,15 @@ public class User implements UserDetails {
     @Column(length = 20)
     private String password;
 
+    @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     @NotEmpty(message = "Email cannot be empty")
-    @Column(length = 100)
     private String email;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -51,6 +51,7 @@ public class  GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.FORBIDDEN.value());
         return ResponseEntity
