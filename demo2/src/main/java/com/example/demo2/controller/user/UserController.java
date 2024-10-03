@@ -1,7 +1,8 @@
 package com.example.demo2.controller.user;
 
-import com.example.demo2.entity.authentication.Role;
+import com.example.demo2.entity.user.Role;
 import com.example.demo2.model.request.authentication.RegisterRequest;
+import com.example.demo2.model.request.user.ChangePasswordRequest;
 import com.example.demo2.model.response.UserResponse;
 import com.example.demo2.service.user.UserService;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -93,5 +95,13 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> searchUserRole(@RequestParam Role role) {
         List<UserResponse> users = userService.searchByRole(role);
         return ResponseEntity.ok(users);
+    }
+
+    @Operation(summary = "Change password users", description = "Change password")
+    @PatchMapping("/change password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request,
+                                            Principal connectedUser){
+        userService.changePassword(request, connectedUser);
+        return ResponseEntity.ok().build();
     }
 }

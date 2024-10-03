@@ -1,4 +1,4 @@
-package com.example.demo2.entity.authentication;
+package com.example.demo2.entity.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

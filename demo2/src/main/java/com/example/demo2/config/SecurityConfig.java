@@ -11,8 +11,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import static com.example.demo2.entity.authentication.Permission.*;
-import static com.example.demo2.entity.authentication.Role.*;
+import static com.example.demo2.entity.user.Permission.*;
+import static com.example.demo2.entity.user.Role.*;
 import static org.springframework.http.HttpMethod.*;
 
 @Configuration
@@ -53,15 +53,15 @@ public class SecurityConfig {
                         .requestMatchers(DELETE,"/Suppliers/**", "/Products/**" )
                         .hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
                         .requestMatchers("/User/**")
-                        .hasAnyRole(ADMIN.name())
+                        .hasRole(ADMIN.name())
                         .requestMatchers(GET,"/User/**" )
-                        .hasAnyAuthority(ADMIN_READ.name())
+                        .hasAuthority(ADMIN_READ.name())
                         .requestMatchers(POST,"/User/**" )
-                        .hasAnyAuthority(ADMIN_CREATE.name())
+                        .hasAuthority(ADMIN_CREATE.name())
                         .requestMatchers(PUT,"/User/**")
-                        .hasAnyAuthority(ADMIN_UPDATE.name())
+                        .hasAuthority(ADMIN_UPDATE.name())
                         .requestMatchers(DELETE,"/User/**" )
-                        .hasAnyAuthority(ADMIN_DELETE.name())
+                        .hasAuthority(ADMIN_DELETE.name())
                         .anyRequest().authenticated()// Require authentication for all other requests
                 )
                 .sessionManagement(session -> session

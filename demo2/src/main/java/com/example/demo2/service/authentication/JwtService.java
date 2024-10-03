@@ -5,12 +5,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.antlr.v4.runtime.Token;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import javax.security.auth.Subject;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,13 +25,19 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
-    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails) {
+        return buildToken(new HashMap<>(), userDetails);
+    }
+
+    public String buildToken(Map<String, Object> extractClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .claims(extractClaims)
+                .subject(userDetails.getUsername())
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 5 * 60 * 24)) // 24 hours
@@ -53,22 +58,12 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
     private Claims extractAllClaims(String token) {
-        try {
             return Jwts.parser()
                     .setSigningKey(getSignInKey())
                     .build()
                     .parseClaimsJws(token)
-                    .getBody(); // Use getBody() here
-        } catch (Exception e) {
-            // Handle the exception (e.g., log it, rethrow, etc.)
-            return null; // Or throw a custom exception
-        }
+                    .getBody();
     }
 
     private SecretKey getSignInKey() {

@@ -1,8 +1,6 @@
 package com.example.demo2.model.response;
 
-import com.example.demo2.entity.authentication.Role;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import com.example.demo2.entity.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

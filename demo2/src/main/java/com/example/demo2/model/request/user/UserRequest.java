@@ -18,10 +18,6 @@ public class UserRequest {
     @Column(length = 20)
     private String lastname;
 
-    @NotEmpty(message = "Password cannot be empty")
-    @Column(length = 20)
-    private String password;
-
     @NotEmpty(message = "Email cannot be empty")
     @Column(length = 100)
     private String email;
