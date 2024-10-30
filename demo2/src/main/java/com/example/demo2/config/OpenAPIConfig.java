@@ -1,8 +1,6 @@
 package com.example.demo2.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -16,9 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
-
-import static io.swagger.v3.oas.annotations.enums.SecuritySchemeIn.*;
-import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.*;
 
 @Configuration
 @OpenAPIDefinition

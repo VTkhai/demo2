@@ -9,17 +9,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
+
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-
 @Service
 public class JwtService {
+    @Value(value = "${application.security.jwt.secret-key}")
+    private  String secretKey;
 
-    private static final String SECRET_KEY = "hbkATduY3tl25vO85joJt5iqOFAlcjGh1NSdQBfpy1eVUxoeekejqWDPpLIV2H/c";
+    @Value("${application.security.jwt.expiration}")
+    private long jwtExpiration;
+
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private long refExpiration;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -31,13 +37,23 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails);
+        return generateToken(new HashMap<>(), userDetails);
     }
 
-    public String buildToken(Map<String, Object> extractClaims, UserDetails userDetails) {
-        return Jwts.builder()
+    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+        return buildToken(extractClaims, userDetails, jwtExpiration);
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return buildToken(new HashMap<>(),userDetails, refExpiration);
+    }
+
+    private String buildToken(Map<String, Object> extractClaims,
+                              UserDetails userDetails,
+                              long expiration){
+        return Jwts
+                .builder()
                 .claims(extractClaims)
-                .subject(userDetails.getUsername())
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 5 * 60 * 24)) // 24 hours
@@ -66,8 +82,8 @@ public class JwtService {
                     .getBody();
     }
 
-    private SecretKey getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
